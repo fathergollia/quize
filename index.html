@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인권 OX 퀴즈</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e0f7fa;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+        .quiz-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.15);
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        .question {
+            font-size: 1.5rem;
+            margin: 20px 0;
+            animation: blink-animation 1.5s steps(5, start) infinite;
+        }
+        @keyframes blink-animation {
+            to {
+                visibility: hidden;
+            }
+        }
+        .answers {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .answers button {
+            padding: 15px 30px;
+            font-size: 1.25rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: #00796b;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+        .answers button:hover {
+            background-color: #004d40;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.5rem;
+        }
+        .fireworks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .fireworks div {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            animation: explode 1s ease-out forwards;
+        }
+        @keyframes explode {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>인권 OX 퀴즈</h1>
+        <div id="quiz"></div>
+        <div id="result" class="result"></div>
+        <div class="fireworks" id="fireworks"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "모든 사람은 교육을 받을 권리가 있습니다.",
+                correctAnswer: "O"
+            },
+            {
+                question: "오직 성인만 공정한 재판을 받을 권리가 있습니다.",
+                correctAnswer: "X"
+            },
+            {
+                question: "모든 사람은 태어날 때부터 자유롭고 평등한 존엄과 권리를 가집니다.",
+                correctAnswer: "O"
+            },
+            {
+                question: "사람들은 자신의 종교를 선택할 권리가 없습니다.",
+                correctAnswer: "X"
+            },
+            {
+                question: "모든 사람은 표현의 자유를 가집니다.",
+                correctAnswer: "O"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        function loadQuestion() {
+            const quizDiv = document.getElementById('quiz');
+            quizDiv.innerHTML = `
+                <div class="question">${questions[currentQuestionIndex].question}</div>
+                <div class="answers">
+                    <button onclick="checkAnswer('O')">O</button>
+                    <button onclick="checkAnswer('X')">X</button>
+                </div>
+            `;
+        }
+
+        function checkAnswer(answer) {
+            const resultDiv = document.getElementById('result');
+            if (answer === questions[currentQuestionIndex].correctAnswer) {
+                resultDiv.textContent = "정답입니다!";
+                showFireworks();
+            } else {
+                resultDiv.textContent = "오답입니다!";
+            }
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                setTimeout(() => {
+                    resultDiv.textContent = "";
+                    loadQuestion();
+                }, 1000);
+            } else {
+                setTimeout(() => {
+                    const quizDiv = document.getElementById('quiz');
+                    quizDiv.innerHTML = '<h2>퀴즈 완료!</h2>';
+                    resultDiv.textContent = "";
+                }, 1000);
+            }
+        }
+
+        function showFireworks() {
+            const fireworksContainer = document.getElementById('fireworks');
+            for (let i = 0; i < 10; i++) {
+                const firework = document.createElement('div');
+                const size = Math.random() * 50 + 20;
+                firework.style.width = `${size}px`;
+                firework.style.height = `${size}px`;
+                firework.style.top = `${Math.random() * 100}%`;
+                firework.style.left = `${Math.random() * 100}%`;
+                firework.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                firework.style.boxShadow = `0 0 10px ${firework.style.backgroundColor}, 0 0 20px ${firework.style.backgroundColor}, 0 0 30px ${firework.style.backgroundColor}`;
+                fireworksContainer.appendChild(firework);
+                setTimeout(() => {
+                    fireworksContainer.removeChild(firework);
+                }, 1000);
+            }
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
